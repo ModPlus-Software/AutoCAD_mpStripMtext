@@ -341,8 +341,7 @@
                         var attributeReference = tr.GetObject(objectId, OpenMode.ForWrite) as AttributeReference;
                         if (attributeReference == null
                             || !attributeReference.IsMTextAttribute
-                            || attributeReference.MTextAttribute == null
-                        )
+                            || attributeReference.MTextAttribute == null)
                             continue;
                         var layerTableRecord =
                             tr.GetObject(attributeReference.LayerId, OpenMode.ForRead) as LayerTableRecord;

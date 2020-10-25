@@ -361,8 +361,12 @@
                     && !obj.ExtensionDictionary.IsEffectivelyErased
                     && obj.ExtensionDictionary.IsValid)
                 {
-                    var d = _tr.GetObject(obj.ExtensionDictionary, OpenMode.ForWrite);
-                    d?.Erase();
+                    using (var tr = _doc.TransactionManager.StartTransaction())
+                    {
+                        var d = _tr.GetObject(obj.ExtensionDictionary, OpenMode.ForWrite);
+                        d?.Erase();
+                        tr.Abort();
+                    }
                 }
 
                 return true;
