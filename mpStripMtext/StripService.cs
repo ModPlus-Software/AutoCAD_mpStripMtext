@@ -71,16 +71,13 @@
         public void StripMAttribute(AttributeReference attributeReference, List<string> formats)
         {
             var database = _doc.Database;
-            if (attributeReference.ExtensionDictionary == ObjectId.Null
-                || CanRemoveDictionary(attributeReference))
-            {
-                var symbolString = GetTextContents(attributeReference.MTextAttribute);
-                var s = StripFormat(symbolString, formats);
-                attributeReference.TextString = s;
-                ////var mTextClone = attributeReference.MTextAttribute;
-                ////mTextClone.Contents = s;
-                ////attributeReference.MTextAttribute = mTextClone;
-            }
+            
+            var symbolString = GetTextContents(attributeReference.MTextAttribute);
+            var s = StripFormat(symbolString, formats);
+            attributeReference.TextString = s;
+            ////var mTextClone = attributeReference.MTextAttribute;
+            ////mTextClone.Contents = s;
+            ////attributeReference.MTextAttribute = mTextClone;
 
             if (formats.Contains("W"))
             {
@@ -323,15 +320,11 @@
 
         public void StripMLeader(MLeader mLeader, List<string> formats)
         {
-            if (mLeader.ExtensionDictionary == ObjectId.Null
-                || CanRemoveDictionary(mLeader))
-            {
-                var symbolString = GetTextContents(mLeader);
-                var s = StripFormat(symbolString, formats);
-                var mTextClone = mLeader.MText;
-                mTextClone.Contents = s;
-                mLeader.MText = mTextClone;
-            }
+            var symbolString = GetTextContents(mLeader);
+            var s = StripFormat(symbolString, formats);
+            var mTextClone = mLeader.MText;
+            mTextClone.Contents = s;
+            mLeader.MText = mTextClone;
         }
 
         public string GetTextContents(DBObject obj)
@@ -350,31 +343,6 @@
                 return attributeReference.MTextAttribute.Contents;
 
             return string.Empty;
-        }
-
-        private bool CanRemoveDictionary(DBObject obj)
-        {
-            try
-            {
-                if (obj.ExtensionDictionary != ObjectId.Null
-                    && !obj.ExtensionDictionary.IsErased
-                    && !obj.ExtensionDictionary.IsEffectivelyErased
-                    && obj.ExtensionDictionary.IsValid)
-                {
-                    using (var tr = _doc.TransactionManager.StartTransaction())
-                    {
-                        var d = _tr.GetObject(obj.ExtensionDictionary, OpenMode.ForWrite);
-                        d?.Erase();
-                        tr.Abort();
-                    }
-                }
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 }
