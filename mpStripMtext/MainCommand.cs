@@ -21,7 +21,9 @@
         [CommandMethod("ModPlus", "mpStripMtext", CommandFlags.UsePickSet)]
         public void Start()
         {
+#if !DEBUG
             Statistic.SendCommandStarting(new ModPlusConnector());
+#endif
             try
             {
                 _doc = AcApp.DocumentManager.MdiActiveDocument;
